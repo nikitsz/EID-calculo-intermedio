@@ -1,18 +1,45 @@
 from manim import *
 import numpy as np
 
-class MovingFrameBox(Scene):
+class ExplicacionFormula(Scene):
+    def construct(self):
+        formula = MathTex(
+            r"S_n", r"=", r"\sum_{i=1}^{n}", r"f(x_i^*)", r"\Delta x"
+        ).scale(1.3)
+
+        self.play(Write(formula))
+        self.wait(1)
+
+        # Destacar la suma de rectángulos
+        box_sum = SurroundingRectangle(formula[2], color=YELLOW)
+        lbl_sum = Text("Suma de n rectángulos", font_size=24, color=YELLOW).next_to(box_sum, UP)
+        self.play(Create(box_sum), Write(lbl_sum))
+        self.wait(2)
+
+        # Destacar la altura f(x_i*)
+        box_height = SurroundingRectangle(formula[3], color=RED)
+        lbl_height = Text("Altura (Punto muestra x_i*)", font_size=24, color=RED).next_to(box_height, DOWN)
+        self.play(ReplacementTransform(box_sum, box_height), ReplacementTransform(lbl_sum, lbl_height))
+        self.wait(2)
+
+        # Destacar el ancho Delta x
+        box_dx = SurroundingRectangle(formula[4], color=BLUE)
+        lbl_dx = Text("Ancho base (Δx)", font_size=24, color=BLUE).next_to(box_dx, UP)
+        self.play(ReplacementTransform(box_height, box_dx), ReplacementTransform(lbl_height, lbl_dx))
+        self.wait(2)
+
+class MovingFrameBox(MovingCameraScene):
 
   def construct(self):
     text = MathTex(r"f(x) = -0.2 x^2 + 1.5 x + 1",
-    substrings_to_isolate=["0.2", "1.5", "1"]
+    substrings_to_isolate=["0.2 x^2", "1.5 x", "1"]
     )
 
 
     self.play(Write(text))
 
-    framebox1 = SurroundingRectangle(text.get_part_by_tex("0.2"), buff=0.1)
-    framebox2 = SurroundingRectangle(text.get_part_by_tex("1.5"), buff=0.1)
+    framebox1 = SurroundingRectangle(text.get_part_by_tex("0.2 x^2"), buff=0.1)
+    framebox2 = SurroundingRectangle(text.get_part_by_tex("1.5 x"), buff=0.1)
     framebox3 = SurroundingRectangle(text.get_part_by_tex("1"), buff=0.1)
 
     self.play(Create(framebox1))
@@ -24,18 +51,28 @@ class MovingFrameBox(Scene):
     self.play(ReplacementTransform(framebox2, framebox3))
     self.wait()
 
-class SinAndCosFunctionPlot(Scene): # Puedes cambiar el nombre de la clase si lo prefieres
+class Function(MovingCameraScene): 
+    def get_rectangle_corners(self, x_min, x_max, height):
+        return [
+            (x_min, 0),
+            (x_min, height),
+            (x_max, height),
+            (x_max, 0),
+        ]
+    
     def construct(self):
         # 1. Configuración de los ejes coordenados
+        func = lambda x: -0.2 * (x**2) + 1.5 * x + 1
+       
         axes = Axes(
-            x_range=[-10, 10.3, 1],
-            y_range=[-4, 5, 1], # Corregido: sintaxis correcta para y_range [min, max, step]
+            x_range=[-6, 10, 1],
+            y_range=[-4, 5, 1], 
             x_length=10,
             axis_config={"numbers_to_include": np.arange(-4, 5, 1),
             "color": GREEN},
             x_axis_config={
-                "numbers_to_include": np.arange(-10, 11, 2),
-                "numbers_with_elongated_ticks": np.arange(-10, 11, 2),
+                "numbers_to_include": np.arange(-6, 11, 2),
+                "numbers_with_elongated_ticks": np.arange(-6, 11, 2),
             },
             tips=False,
         )
@@ -55,7 +92,7 @@ class SinAndCosFunctionPlot(Scene): # Puedes cambiar el nombre de la clase si lo
         
 
         # ==========================================================
-        # SECUENCIA DE ANIMACIÓN 🎬
+        # SECUENCIA DE ANIMACIÓN 
         # ==========================================================
         
         # 1. Dibuja los ejes y escribe los nombres (X e Y) simultáneamente
@@ -90,3 +127,104 @@ class SinAndCosFunctionPlot(Scene): # Puedes cambiar el nombre de la clase si lo
         
 
         self.wait(2)
+
+        riemann_rects = axes.get_riemann_rectangles(
+            func_graph,
+            x_range=[0, 5],
+            dx=5/6,
+            input_sample_type="right", # O "left", "center"
+            stroke_width=1,
+            stroke_color=WHITE,
+            fill_opacity=0.3,
+            color=TEAL
+        )
+
+        self.play(Create(riemann_rects), run_time=2)
+        self.wait(3) # Pausa para explicar la partición global
+
+        self.play(FadeOut(riemann_rects), run_time=1)
+        
+        punto_enfoque = axes.c2p(1.75, 1.2)
+
+     # 2. Hacemos el acercamiento de cámara en 2.5 segundos
+        self.play(
+        self.camera.frame.animate.scale(0.45).move_to(punto_enfoque),
+        run_time=2.5
+     )
+
+     # 3. Pausa para continuar hablando con el zoom puesto
+        self.wait(5)
+
+        x_min, x_max = 1.0, 2.5
+
+        # Tramo acotado
+        sub_func_graph = axes.plot(
+            func, 
+            x_range=[x_min, x_max], 
+            color=YELLOW, # Cambiar color para destacar
+            stroke_width=6
+        )
+
+        # Atenuamos la curva completa (20% de opacidad) y hacemos aparecer el tramo
+        self.play(
+            func_graph.animate.set_opacity(0.25),
+            Create(sub_func_graph),
+            run_time=1.5
+        )
+        self.wait(2)
+
+        t = ValueTracker(1.75) # Punto medio inicial
+
+        # Polígono redibujado según t.get_value()
+        def get_rectangle():
+            height = func(t.get_value())
+            corners = self.get_rectangle_corners(x_min, x_max, height)
+            polygon = Polygon(*[axes.c2p(*pt) for pt in corners])
+            polygon.set_stroke(YELLOW_B, width=2)
+            polygon.set_fill(TEAL, opacity=0.4)
+            return polygon
+
+        rectangle = always_redraw(get_rectangle)
+
+        # Punto sobre la curva f(x_i*)
+        dot = Dot(color=RED)
+        dot.add_updater(lambda d: d.move_to(axes.c2p(t.get_value(), func(t.get_value()))))
+        dot.set_z_index(10)
+
+        # Proyección vertical
+        dashed_line = always_redraw(
+            lambda: DashedLine(
+                axes.c2p(t.get_value(), 0),
+                axes.c2p(t.get_value(), func(t.get_value())),
+                color=RED
+            )
+        )
+
+        # Aparece el rectángulo en pantalla
+        self.add(rectangle, dot, dashed_line)
+        self.wait(2)
+
+        # DEMOSTRACIÓN DE LA PREGUNTA CENTRAL: Mover x_i*
+        # 1. Extremo izquierdo (1.0)
+        self.play(t.animate.set_value(1.0), run_time=2)
+        self.wait(1)
+
+        # 2. Extremo derecho (2.5)
+        self.play(t.animate.set_value(2.5), run_time=2)
+        self.wait(1)
+
+        # 3. Punto interior arbitrario (1.3)
+        self.play(t.animate.set_value(1.3), run_time=2)
+        self.wait(3)
+        self.play(FadeOut(rectangle, dot, dashed_line, sub_func_graph))
+
+        for num_rects in [5, 15, 40]:
+            new_rects = axes.get_riemann_rectangles(
+                func_graph,
+                x_range=[0, 5],
+                dx=5/num_rects,
+                fill_opacity=0.4,
+                color=TEAL
+            )
+            self.play(Transform(riemann_rects, new_rects), run_time=1.5)
+            self.wait(0.5)
