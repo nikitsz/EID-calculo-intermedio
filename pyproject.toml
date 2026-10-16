@@ -2,7 +2,7 @@
 name = "eid-calculo-intermedio"
 version = "0.1.0"
 description = "Add your description here"
-readme = "README.md"
+readme = "src/eid_calculo_intermedio/README.md"
 authors = [
     { name = "nikitsz", email = "ncalderon2026@alu.uct.cl" }
 ]
