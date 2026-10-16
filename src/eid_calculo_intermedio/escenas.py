@@ -18,7 +18,7 @@ class ExplicacionFormula(Scene):
 
         # Destacar la altura f(x_i*)
         box_height = SurroundingRectangle(formula[3], color=RED)
-        lbl_height = Text("Altura (Punto muestra x_i*)", font_size=24, color=RED).next_to(box_height, DOWN)
+        lbl_height = Text("Altura (Punto muestra x_i*)", font_size=24, color=RED).next_to(box_height, UP, buff=0.5)
         self.play(ReplacementTransform(box_sum, box_height), ReplacementTransform(lbl_sum, lbl_height))
         self.wait(2)
 
@@ -113,15 +113,13 @@ class Function(MovingCameraScene):
         # 4. Se traza la línea vertical amarilla
 
         # Mantiene el resultado final en pantalla por 2 segundos antes de terminar
-        self.wait(10)
         x_value_1 = 5
         vert_line_5 = axes.get_vertical_line(axes.i2gp(x_value_1, func_graph), color=YELLOW)
 
         x_value_2 = 0
         vert_line_0 = axes.get_vertical_line(axes.i2gp(x_value_2, func_graph), color=YELLOW)
 
-        intervalo = axes.get_graph_label(func_graph, label="[0, 5]", x_val=4, direction=DOWN)
-        self.play(Write(intervalo), run_time=2)
+        intervalo = MathTex(r"[0, 5]").next_to(axes.c2p(2.5, 0), DOWN)
         self.play(Create(vert_line_5), run_time=1)
         self.play(Create(vert_line_0), run_time=1)
         
@@ -217,6 +215,18 @@ class Function(MovingCameraScene):
         self.play(t.animate.set_value(1.3), run_time=2)
         self.wait(3)
         self.play(FadeOut(rectangle, dot, dashed_line, sub_func_graph))
+        # Camara vuelve a la vista completa
+        self.play(
+            self.camera.frame.animate.scale(1 / 0.45).move_to(axes.get_center()),
+            func_graph.animate.set_opacity(1),
+            run_time=2
+        )
+        self.wait(0.5)
+
+        riemann_rects = axes.get_riemann_rectangles(
+            func_graph, x_range=[0, 5], dx=5/5, fill_opacity=0.4, color=TEAL
+        )
+        self.play(Create(riemann_rects), run_time=1.5)
 
         for num_rects in [5, 15, 40]:
             new_rects = axes.get_riemann_rectangles(
@@ -227,4 +237,4 @@ class Function(MovingCameraScene):
                 color=TEAL
             )
             self.play(Transform(riemann_rects, new_rects), run_time=1.5)
-            self.wait(0.5)
+            self.wait(2)
