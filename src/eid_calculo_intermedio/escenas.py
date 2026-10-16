@@ -1,6 +1,36 @@
 from manim import *
 import numpy as np
 
+class Portada(Scene):
+    def construct(self):
+        # 1. CREACIÓN DE OBJETOS DE TEXTO
+        titulo = Text("Punto Medio y Punto Interior", font_size=36, color=YELLOW)
+        subtitulo = Text("MAT1134 - Cálculo Intermedio | Grupo 11", font_size=22, color=GRAY_A)
+        integrantes = Text("Lucas Villegas - Diego Vásquez - Nicolás Calderón", font_size=18, color=WHITE)
+
+        # Bloque de la Pregunta Central
+        pregunta_hdr = Text("Pregunta Central:", font_size=20, color=YELLOW_B)
+        pregunta = Text(
+            "¿Es estrictamente necesario que el punto muestra x_i*\n"
+            "sea el punto medio, o puede ser cualquier punto interior\n"
+            "al tomar el límite cuando n → ∞?",
+            font_size=18, color=WHITE
+        )
+
+        # 2. AGRUPACIÓN Y ORDENAMIENTO (LAYOUT)
+        encabezado = VGroup(titulo, subtitulo, integrantes).arrange(DOWN, buff=0.3)
+        bloque_pregunta = VGroup(pregunta_hdr, pregunta).arrange(DOWN, buff=0.2)
+
+        # Agrupamos los dos bloques principales
+        pantalla_completa = VGroup(encabezado, bloque_pregunta).arrange(DOWN, buff=0.7)
+
+        # 3. SECUENCIA DE ANIMACIÓN
+        self.play(Write(encabezado), run_time=2.5)
+        self.wait(1)
+        
+        self.play(FadeIn(bloque_pregunta), run_time=2)
+        self.wait(3)
+
 class ExplicacionFormula(Scene):
     def construct(self):
         formula = MathTex(
@@ -120,6 +150,7 @@ class Function(MovingCameraScene):
         vert_line_0 = axes.get_vertical_line(axes.i2gp(x_value_2, func_graph), color=YELLOW)
 
         intervalo = MathTex(r"[0, 5]").next_to(axes.c2p(2.5, 0), DOWN)
+        self.play(Write(intervalo))
         self.play(Create(vert_line_5), run_time=1)
         self.play(Create(vert_line_0), run_time=1)
         
