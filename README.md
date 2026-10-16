@@ -21,22 +21,22 @@ Todos los integrantes deben comprender el proyecto completo y participar con su 
 
 ## Objetivo
 
-Mostrar que en cada subintervalo puede elegirse cualquier punto muestra $x_i^*\in[x_{i-1},x_i]$. La visualización compara el punto medio, los extremos y otro punto interior dentro de un mismo subintervalo, y explica cómo la elección determina la altura $f(x_i^*)$ del rectángulo correspondiente.
+Mostrar que en cada subintervalo puede elegirse cualquier punto muestra $x_i^{\ast}\in[x_{i-1},x_i]$. La visualización compara el punto medio, los extremos y otro punto interior dentro de un mismo subintervalo, y explica cómo la elección determina la altura $f(x_i^{\ast})$ del rectángulo correspondiente.
 
 ## Fundamento y respuesta a la pregunta central
 
 Para una partición uniforme de $[a,b]$ en $n$ subintervalos:
 
 $$
-\Delta x=\frac{b-a}{n},\qquad S_n=\sum_{i=1}^{n}f(x_i^*)\Delta x.
+\Delta x=\frac{b-a}{n},\qquad S_n=\sum_{i=1}^{n}f(x_i^{\ast})\Delta x.
 $$
 
-La definición de suma de Riemann permite elegir cualquier $x_i^*\in[x_{i-1},x_i]$. Los extremos y el punto medio son criterios particulares de elección, no condiciones obligatorias. El punto medio también es un punto interior.
+La definición de suma de Riemann permite elegir cualquier $x_i^{\ast}\in[x_{i-1},x_i]$. Los extremos y el punto medio son criterios particulares de elección, no condiciones obligatorias. El punto medio también es un punto interior.
 
 Podemos expresar todas estas elecciones como:
 
 $$
-x_i^*=x_{i-1}+\theta_i(x_i-x_{i-1}),\qquad 0\leq\theta_i\leq1.
+x_i^{\ast}=x_{i-1}+\theta_i(x_i-x_{i-1}),\qquad 0\leq\theta_i\leq1.
 $$
 
 Los valores $\theta_i=0$, $1$ y $1/2$ corresponden al extremo izquierdo, al derecho y al punto medio. Otros valores entre 0 y 1 producen puntos interiores distintos del punto medio. La elección puede variar de un subintervalo a otro.
@@ -53,14 +53,14 @@ $$
 
 La demostración local mantiene fija la base $[1,2.5]$, de ancho $1.5$, y mueve el punto muestra:
 
-| Elección | $x_i^*$ | Altura $f(x_i^*)$ | Área del rectángulo $1.5f(x_i^*)$ |
+| Elección | $x_i^{\ast}$ | Altura $f(x_i^{\ast})$ | Área del rectángulo $1.5f(x_i^{\ast})$ |
 | --- | --- | --- | --- |
 | Punto medio inicial | 1.75 | 3.0125 | 4.51875 |
 | Extremo izquierdo | 1 | 2.3 | 3.45 |
 | Extremo derecho | 2.5 | 3.5 | 5.25 |
 | Otro punto interior | 1.3 | 2.612 | 3.918 |
 
-El punto rojo representa $(x_i^*,f(x_i^*))$ y la línea vertical discontinua conecta el punto muestra con la altura. Al moverlo cambia la altura y, en este ejemplo, el área del rectángulo; el ancho permanece fijo. La tabla complementa la explicación: sus valores no aparecen escritos en la animación original.
+El punto rojo representa $(x_i^{\ast},f(x_i^{\ast}))$ y la línea vertical discontinua conecta el punto muestra con la altura. Al moverlo cambia la altura y, en este ejemplo, el área del rectángulo; el ancho permanece fijo. La tabla complementa la explicación: sus valores no aparecen escritos en la animación original.
 
 Este tramo es una demostración local independiente y no coincide con una celda de la partición inicial de seis rectángulos.
 
