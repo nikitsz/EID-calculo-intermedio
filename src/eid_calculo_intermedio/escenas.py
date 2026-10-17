@@ -11,9 +11,9 @@ class Portada(Scene):
         # Bloque de la Pregunta Central
         pregunta_hdr = Text("Pregunta Central:", font_size=20, color=YELLOW_B)
         pregunta = Text(
-            "¿Es estrictamente necesario que el punto muestra x_i*\n"
-            "sea el punto medio, o puede ser cualquier punto interior\n"
-            "al tomar el límite cuando n → ∞?",
+            "¿El punto muestra x_i* debe ser obligatoriamente el punto medio\n"
+            "o puede ser cualquier punto interior de [x_{i-1}, x_i]\n"
+            "para calcular la suma de Riemann finita S_n?",
             font_size=18, color=WHITE
         )
 
@@ -124,33 +124,32 @@ class EjemploNumerico(Scene):
         self.wait(0.5)
         self.play(FadeOut(framebox3))
 
-        # 3. INTEGRAL Y ÁREA EXACTA
-        area_exacta = MathTex(
-            r"\text{Área exacta} = \int_0^5 f(x) \, dx = \frac{185}{12} \approx 15.4167",
+        # 3. SUMA FINITA PARA CADA ELECCIÓN DEL PUNTO MUESTRA
+        suma_finita = MathTex(
+            r"S_n = \sum_{i=1}^{n} f(x_i^*)\Delta x, \qquad \Delta x = \frac{5}{n}",
             font_size=22, color=GREEN
         ).next_to(f_tex, DOWN, buff=0.3)
 
-        self.play(Write(area_exacta))
+        self.play(Write(suma_finita))
         self.wait(1)
 
         # 4. TABLA COMPARATIVA
         hdr_tabla = MathTex(
-            r"\text{Aproximaciones } S_n \text{ según la elección de } x_i^*:",
+            r"\text{Sumas finitas } S_n \quad (\text{interior: } x_i^* = x_{i-1} + \Delta x/3):",
             font_size=18, color=WHITE
         )
         tabla = MobjectTable(
             [
                 [Text("n", font_size=16, color=YELLOW), Text("Extremo Izq.", font_size=16), Text("Punto Medio", font_size=16), Text("Punto Interior", font_size=16)],
-                [Text("5", font_size=16), Text("14.0000", font_size=16), Text("15.5000", font_size=16), Text("14.8333", font_size=16)],
-                [Text("15", font_size=16), Text("14.9352", font_size=16), Text("15.4259", font_size=16), Text("15.2201", font_size=16)],
-                [Text("40", font_size=16), Text("15.2344", font_size=16), Text("15.4180", font_size=16), Text("15.3418", font_size=16)],
-                [Text("∞", font_size=16, color=GREEN), Text("15.4167", font_size=16, color=GREEN), Text("15.4167", font_size=16, color=GREEN), Text("15.4167", font_size=16, color=GREEN)]
+                [Text("5", font_size=16), Text("14.0000", font_size=16), Text("15.5000", font_size=16), Text("15.0556", font_size=16)],
+                [Text("15", font_size=16), Text("14.9815", font_size=16), Text("15.4259", font_size=16), Text("15.2840", font_size=16)],
+                [Text("40", font_size=16), Text("15.2578", font_size=16), Text("15.4180", font_size=16), Text("15.3655", font_size=16)]
             ],
             line_config={"stroke_width": 1}
         ).scale(0.8)
 
         bloque_inferior = VGroup(hdr_tabla, tabla).arrange(DOWN, buff=0.2)
-        bloque_inferior.next_to(area_exacta, DOWN, buff=0.3)
+        bloque_inferior.next_to(suma_finita, DOWN, buff=0.3)
 
         self.play(FadeIn(hdr_tabla), Create(tabla))
         self.wait(4)
@@ -253,6 +252,8 @@ class Function(MovingCameraScene):
      # 2. Hacemos el acercamiento de cámara en 2.5 segundos
         self.play(
         self.camera.frame.animate.scale(0.45).move_to(punto_enfoque),
+        FadeOut(axes.x_axis.numbers),
+        FadeOut(func_label, intervalo),
         run_time=2.5
      )
 
@@ -291,9 +292,12 @@ class Function(MovingCameraScene):
         rectangle = always_redraw(get_rectangle)
 
         # Punto sobre la curva f(x_i*)
-        dot = Dot(color=RED)
-        dot.add_updater(lambda d: d.move_to(axes.c2p(t.get_value(), func(t.get_value()))))
-        dot.set_z_index(10)
+        dot = always_redraw(
+            lambda: Dot(
+                axes.c2p(t.get_value(), func(t.get_value())),
+                color=RED,
+            ).set_z_index(10)
+        )
 
         # Proyección vertical
         dashed_line = always_redraw(
@@ -304,8 +308,23 @@ class Function(MovingCameraScene):
             )
         )
 
+        # Extremos fijos y punto muestra móvil, proyectados sobre el eje X.
+        etiqueta_izquierda = MathTex(r"x_{i-1}", font_size=16, color=YELLOW_B)
+        etiqueta_izquierda.next_to(axes.c2p(x_min, 0), DOWN, buff=0.1)
+        etiqueta_derecha = MathTex(r"x_i", font_size=16, color=YELLOW_B)
+        etiqueta_derecha.next_to(axes.c2p(x_max, 0), DOWN, buff=0.1)
+        muestra_tex = MathTex(r"x_i^*", font_size=16, color=RED)
+        etiqueta_muestra = always_redraw(
+            lambda: muestra_tex.copy().next_to(
+                axes.c2p(t.get_value(), 0), DOWN, buff=0.45
+            ).set_z_index(10)
+        )
+
         # Aparece el rectángulo en pantalla
-        self.add(rectangle, dot, dashed_line)
+        self.add(
+            rectangle, dot, dashed_line,
+            etiqueta_izquierda, etiqueta_derecha, etiqueta_muestra,
+        )
         self.wait(2)
 
         # DEMOSTRACIÓN DE LA PREGUNTA CENTRAL: Mover x_i*
@@ -320,11 +339,16 @@ class Function(MovingCameraScene):
         # 3. Punto interior arbitrario (1.3)
         self.play(t.animate.set_value(1.3), run_time=2)
         self.wait(3)
-        self.play(FadeOut(rectangle, dot, dashed_line, sub_func_graph))
+        self.play(FadeOut(
+            rectangle, dot, dashed_line, sub_func_graph,
+            etiqueta_izquierda, etiqueta_derecha, etiqueta_muestra,
+        ))
         # Camara vuelve a la vista completa
         self.play(
             self.camera.frame.animate.scale(1 / 0.45).move_to(axes.get_center()),
             func_graph.animate.set_stroke(opacity=1),
+            FadeIn(axes.x_axis.numbers),
+            FadeIn(func_label, intervalo),
             run_time=2
         )
         self.wait(0.5)
@@ -353,8 +377,9 @@ class Conclusion(Scene):
         # 2. REPETICIÓN DE LA PREGUNTA CENTRAL
         pregunta_hdr = Text("Pregunta Central:", font_size=18, color=YELLOW_B)
         pregunta_txt = Text(
-            "\"¿Es estrictamente necesario que el punto muestra x_i* sea el punto medio,\n"
-            "o puede ser cualquier punto interior al tomar el límite cuando n → ∞?\"",
+            "¿El punto muestra x_i* debe ser obligatoriamente el punto medio\n"
+            "o puede ser cualquier punto interior de [x_{i-1}, x_i]\n"
+            "para calcular la suma de Riemann finita S_n?",
             font_size=15, color=WHITE
         )
         bloque_pregunta = VGroup(pregunta_hdr, pregunta_txt).arrange(DOWN, buff=0.1)
@@ -363,17 +388,17 @@ class Conclusion(Scene):
         respuesta = Text("Respuesta: NO es estrictamente necesario.", font_size=18, color=GREEN)
 
         p1 = MathTex(
-            r"\bullet \text{ Como } f(x) \text{ es continua en } [0, 5], \text{ el ancho } \Delta x = \frac{5-0}{n} \to 0 \text{ cuando } n \to \infty.",
+            r"\bullet \text{ El punto medio es una opción; cualquier } x_{i-1} < x_i^* < x_i \text{ es un punto interior válido.}",
             font_size=16
         )
         p2 = MathTex(
-            r"\bullet \text{ Al volverse } \Delta x \text{ infinitamente pequeño, la elección de } x_i^* \text{ no altera el valor final}.",
+            r"\bullet \text{ Con } n \text{ fijo, cambiar } x_i^* \text{ puede cambiar las alturas y el valor de } S_n.",
             font_size=16
         )
 
         # 4. RESULTADO ENMARCADO
         formula_final = MathTex(
-            r"\lim_{n \to \infty} \sum_{i=1}^{n} f(x_i^*) \Delta x = \int_0^5 f(x) \, dx = \frac{185}{12} \approx 15.4167",
+            r"S_n = \sum_{i=1}^{n} f(x_i^*)\Delta x, \qquad \Delta x = \frac{5}{n}, \quad x_i^* \in [x_{i-1}, x_i]",
             font_size=20
         )
         box = SurroundingRectangle(formula_final, color=YELLOW, buff=0.15)

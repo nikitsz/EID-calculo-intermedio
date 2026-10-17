@@ -8,7 +8,7 @@ Proyecto de animación matemática con **Manim Community** para la Evaluación I
 - **Sección:** 1.
 - **Grupo:** 11 (G11).
 - **Tema:** Punto medio y punto interior.
-- **Pregunta central:** ¿Por qué el punto muestra no tiene que ser necesariamente un extremo ni el punto medio?
+- **Pregunta central:** ¿El punto muestra $x_i^{\ast}$ debe ser obligatoriamente el punto medio o puede ser cualquier punto interior de $[x_{i-1},x_i]$ para calcular la suma de Riemann finita $S_n$?
 - **Repositorio:** https://github.com/nikitsz/EID-calculo-intermedio
 
 | Integrante | GitHub | Responsabilidad principal y aportes |
@@ -60,36 +60,33 @@ La demostración local mantiene fija la base $[1,2.5]$, de ancho $1.5$, y mueve 
 | Extremo derecho | 2.5 | 3.5 | 5.25 |
 | Otro punto interior | 1.3 | 2.612 | 3.918 |
 
-El punto rojo representa $(x_i^{\ast},f(x_i^{\ast}))$ y la línea vertical discontinua conecta el punto muestra con la altura. Al moverlo cambia la altura y, en este ejemplo, el área del rectángulo; el ancho permanece fijo. La tabla complementa la explicación: sus valores no aparecen escritos en la animación original.
+El punto rojo representa $(x_i^{\ast},f(x_i^{\ast}))$ y la línea vertical discontinua conecta el punto muestra con la altura. En el zoom, las etiquetas $x_{i-1}$ y $x_i$ señalan los extremos, y $x_i^{\ast}$ sigue la proyección del punto rojo sobre el eje X. Al moverlo cambia la altura y, en este ejemplo, el área del rectángulo; el ancho permanece fijo. La tabla complementa la explicación: sus valores no aparecen escritos en la animación original.
 
-Este tramo es una demostración local independiente y no coincide con una celda de la partición inicial de seis rectángulos.
+Este tramo es una demostración local independiente y no coincide con una celda de la partición inicial de cinco rectángulos.
 
-### Conexión con la integral
+### Comparación de sumas finitas
 
-La función es continua y positiva en $[0,5]$. Cuando el tamaño de los subintervalos tiende a cero, las sumas de Riemann convergen al área bajo la curva, independientemente de las elecciones válidas de puntos muestra:
-
-$$
-\lim_{n\to\infty}S_n=\int_0^5f(x)\,dx=\frac{185}{12}\approx15.4167.
-$$
-
-Como comprobación, la primera partición animada usa seis rectángulos, ancho $5/6$ y extremos derechos:
+Para un número fijo de subintervalos, la elección del punto muestra puede cambiar el valor de $S_n$. En la primera partición animada se usan cinco rectángulos, ancho $1$ y extremos derechos:
 
 $$
-S_6=\sum_{i=1}^{6}f\left(\frac{5i}{6}\right)\frac56
-=\frac{1765}{108}\approx16.3426.
+S_5=\sum_{i=1}^{5}f(i)=16.5.
 $$
 
-Estos valores no se muestran numéricamente en el código. Una animación con 40 rectángulos ilustra el refinamiento, pero no demuestra por sí sola el límite.
+La escena `EjemploNumerico` compara las sumas con $n=5,15,40$ usando extremos izquierdos, puntos medios y puntos interiores $x_i^{\ast}=x_{i-1}+\Delta x/3$. La escena `Function` termina mostrando particiones finitas de 5, 15 y 40 rectángulos.
 
 ## Escenas
 
-Las tres clases se encuentran en [src/eid_calculo_intermedio/escenas.py](escenas.py).
+Las escenas se encuentran en [escenas.py](src/eid_calculo_intermedio/escenas.py).
 
 | Clase | Contenido |
 | --- | --- |
 | ExplicacionFormula | Explica la sumatoria, la altura y la base del rectángulo. |
-| MovingFrameBox | Presenta la función cuadrática y resalta sus términos. |
-| Function | Grafica la función, delimita el intervalo, muestra seis rectángulos derechos, compara puntos muestra en una base fija y termina con particiones de 5, 15 y 40 rectángulos. |
+| Portada | Presenta al grupo y la pregunta sobre la suma finita. |
+| Teoria | Explica la partición y las opciones de punto muestra. |
+| EjemploNumerico | Presenta la función y compara valores de sumas finitas. |
+| Conclusion | Responde la pregunta con la fórmula de S_n. |
+| Creditos | Muestra integrantes, referencias y herramientas. |
+| Function | Grafica la función, delimita el intervalo, muestra cinco rectángulos derechos, compara puntos muestra en una base fija y termina con particiones de 5, 15 y 40 rectángulos. |
 
 En las particiones finales no se fija explícitamente el criterio de muestreo; se usa el valor predeterminado de la versión instalada de Manim.
 
@@ -128,14 +125,14 @@ Desde la raíz del repositorio, renderizar vistas previas:
 
 ~~~bash
 uv run python -m manim -pql src/eid_calculo_intermedio/escenas.py ExplicacionFormula
-uv run python -m manim -pql src/eid_calculo_intermedio/escenas.py MovingFrameBox
+uv run python -m manim -pql src/eid_calculo_intermedio/escenas.py Portada Teoria EjemploNumerico Conclusion Creditos
 uv run python -m manim -pql src/eid_calculo_intermedio/escenas.py Function
 ~~~
 
-Para renderizar las tres escenas en calidad alta:
+Para renderizar todas las escenas en calidad alta:
 
 ~~~bash
-uv run python -m manim -qh src/eid_calculo_intermedio/escenas.py ExplicacionFormula MovingFrameBox Function
+uv run python -m manim -qh src/eid_calculo_intermedio/escenas.py Portada Teoria ExplicacionFormula EjemploNumerico Function Conclusion Creditos
 ~~~
 
 -p abre el resultado, -ql selecciona calidad baja y -qh calidad alta. Manim guarda los videos en media/videos/, con subcarpetas según el archivo y la calidad.
@@ -167,5 +164,5 @@ Este README documenta el proyecto desde la carpeta de las escenas.
 
 Se utilizó **Codex de OpenAI** para redactar y actualizar este README a partir del código, la pauta EID y los datos del grupo. La asistencia comprendió organización, descripción de escenas, explicación matemática e instrucciones de ejecución.
 
-La revisión documental incluyó la lectura del código y la configuración del repositorio. No se renderizaron las escenas durante la elaboración del README.
+La validación incluyó el renderizado de las siete escenas con Manim Community 0.22.0 y MiKTeX, en calidad de vista previa (480p, 15 fps). Se revisaron visualmente las fórmulas y el zoom, comprobando el punto rojo sobre la curva y las etiquetas de los extremos y del punto muestra.
 
