@@ -31,6 +31,42 @@ class Portada(Scene):
         self.play(FadeIn(bloque_pregunta), run_time=2)
         self.wait(3)
 
+class Teoria(Scene):
+    def construct(self):
+        # 1. TÍTULO UN POCO MÁS PEQUEÑO Y CON MARGEN
+        titulo = Text("Teoría: Suma de Riemann y Punto Muestra", font_size=22, color=YELLOW).to_edge(UP, buff=0.4)
+
+        # 2. SECCIONES CON FORMATEO MATEMÁTICO REAL
+        t1 = Text("1. División del intervalo [a, b]:", font_size=16, color=BLUE)
+        sub1 = MathTex(r"\text{Dividimos el dominio en } n \text{ subintervalos de ancho } \Delta x.", font_size=18)
+
+        t2 = Text("2. Elección del punto muestra:", font_size=16, color=GREEN)
+        sub2 = MathTex(r"\text{En cada } [x_{i-1}, x_i], \text{ elegimos } x_i^* \text{ para evaluar } f(x_i^*).", font_size=18)
+
+        t3 = Text("3. Opciones habituales para } x_i^*:", font_size=16, color=ORANGE)
+        op1 = MathTex(r"\bullet \text{ Extremo izquierdo: } x_i^* = x_{i-1}", font_size=17)
+        op2 = MathTex(r"\bullet \text{ Extremo derecho: } x_i^* = x_i", font_size=17)
+        op3 = MathTex(r"\bullet \text{ Punto medio: } x_i^* = \frac{x_{i-1} + x_i}{2}", font_size=17)
+        op4 = MathTex(r"\bullet \text{ Punto interior arbitrario: } x_{i-1} < x_i^* < x_i", font_size=17)
+
+        opciones = VGroup(op1, op2, op3, op4).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
+
+        # 3. AGRUPACIÓN Y ALINEACIÓN
+        g1 = VGroup(t1, sub1).arrange(DOWN, aligned_edge=LEFT, buff=0.08)
+        g2 = VGroup(t2, sub2).arrange(DOWN, aligned_edge=LEFT, buff=0.08)
+        g3 = VGroup(t3, opciones).arrange(DOWN, aligned_edge=LEFT, buff=0.08)
+
+        contenido = VGroup(g1, g2, g3).arrange(DOWN, aligned_edge=LEFT, buff=0.22)
+        contenido.next_to(titulo, DOWN, buff=0.3)
+
+        # 4. ANIMACIÓN
+        self.play(Write(titulo))
+        self.wait(0.3)
+        self.play(FadeIn(g1))
+        self.play(FadeIn(g2))
+        self.play(FadeIn(g3))
+        self.wait(3)
+        
 class ExplicacionFormula(Scene):
     def construct(self):
         formula = MathTex(
@@ -58,29 +94,67 @@ class ExplicacionFormula(Scene):
         self.play(ReplacementTransform(box_height, box_dx), ReplacementTransform(lbl_height, lbl_dx))
         self.wait(2)
 
-class MovingFrameBox(MovingCameraScene):
+class EjemploNumerico(Scene):
+    def construct(self):
+        # 1. TÍTULO
+        titulo = Text("Ejemplo Propio y Cálculo Algebraico", font_size=28, color=YELLOW).to_edge(UP)
+        self.play(Write(titulo))
+        self.wait(0.5)
 
-  def construct(self):
-    text = MathTex(r"f(x) = -0.2 x^2 + 1.5 x + 1",
-    substrings_to_isolate=["0.2 x^2", "1.5 x", "1"]
-    )
+        # 2. TU ANIMACIÓN DE LA FUNCIÓN (MovingFrameBox integrada)
+        f_tex = MathTex(
+            r"f(x) = ", r"-0.2 x^2", r" + ", r"1.5 x", r" + ", r"1", 
+            r"\quad \text{en } [0, 5]",
+            font_size=22
+        )
+        f_tex.next_to(titulo, DOWN, buff=0.4)
 
+        self.play(Write(f_tex))
 
-    self.play(Write(text))
+        # Recuadros para cada componente
+        framebox1 = SurroundingRectangle(f_tex[1], color=YELLOW, buff=0.1)
+        framebox2 = SurroundingRectangle(f_tex[3], color=YELLOW, buff=0.1)
+        framebox3 = SurroundingRectangle(f_tex[5], color=YELLOW, buff=0.1)
 
-    framebox1 = SurroundingRectangle(text.get_part_by_tex("0.2 x^2"), buff=0.1)
-    framebox2 = SurroundingRectangle(text.get_part_by_tex("1.5 x"), buff=0.1)
-    framebox3 = SurroundingRectangle(text.get_part_by_tex("1"), buff=0.1)
+        self.play(Create(framebox1))
+        self.wait(0.5)
+        self.play(ReplacementTransform(framebox1, framebox2))
+        self.wait(0.5)
+        self.play(ReplacementTransform(framebox2, framebox3))
+        self.wait(0.5)
+        self.play(FadeOut(framebox3))
 
-    self.play(Create(framebox1))
-    self.wait()
+        # 3. INTEGRAL Y ÁREA EXACTA
+        area_exacta = MathTex(
+            r"\text{Área exacta} = \int_0^5 f(x) \, dx = \frac{185}{12} \approx 15.4167",
+            font_size=22, color=GREEN
+        ).next_to(f_tex, DOWN, buff=0.3)
+
+        self.play(Write(area_exacta))
+        self.wait(1)
+
+        # 4. TABLA COMPARATIVA
+        hdr_tabla = MathTex(
+            r"\text{Aproximaciones } S_n \text{ según la elección de } x_i^*:",
+            font_size=18, color=WHITE
+        )
+        tabla = MobjectTable(
+            [
+                [Text("n", font_size=16, color=YELLOW), Text("Extremo Izq.", font_size=16), Text("Punto Medio", font_size=16), Text("Punto Interior", font_size=16)],
+                [Text("5", font_size=16), Text("14.0000", font_size=16), Text("15.5000", font_size=16), Text("14.8333", font_size=16)],
+                [Text("15", font_size=16), Text("14.9352", font_size=16), Text("15.4259", font_size=16), Text("15.2201", font_size=16)],
+                [Text("40", font_size=16), Text("15.2344", font_size=16), Text("15.4180", font_size=16), Text("15.3418", font_size=16)],
+                [Text("∞", font_size=16, color=GREEN), Text("15.4167", font_size=16, color=GREEN), Text("15.4167", font_size=16, color=GREEN), Text("15.4167", font_size=16, color=GREEN)]
+            ],
+            line_config={"stroke_width": 1}
+        ).scale(0.8)
+
+        bloque_inferior = VGroup(hdr_tabla, tabla).arrange(DOWN, buff=0.2)
+        bloque_inferior.next_to(area_exacta, DOWN, buff=0.3)
+
+        self.play(FadeIn(hdr_tabla), Create(tabla))
+        self.wait(4)
         
-    self.play(ReplacementTransform(framebox1, framebox2))
-    self.wait()
-        
-    self.play(ReplacementTransform(framebox2, framebox3))
-    self.wait()
-
 class Function(MovingCameraScene): 
     def get_rectangle_corners(self, x_min, x_max, height):
         return [
@@ -114,6 +188,7 @@ class Function(MovingCameraScene):
             color=BLUE, 
             x_range=[-6, 11]
         )
+        func_graph.set_fill(opacity=0)
 
         # 3. Etiqueta de la función
         func_label = axes.get_graph_label(func_graph, label="f(x)", x_val=2, direction=UP)
@@ -149,7 +224,7 @@ class Function(MovingCameraScene):
         x_value_2 = 0
         vert_line_0 = axes.get_vertical_line(axes.i2gp(x_value_2, func_graph), color=YELLOW)
 
-        intervalo = MathTex(r"[0, 5]").next_to(axes.c2p(2.5, 0), DOWN)
+        intervalo = MathTex(r"[0, 5]", color=YELLOW).next_to(axes.c2p(2.5, 0), DOWN, buff=0.75)
         self.play(Write(intervalo))
         self.play(Create(vert_line_5), run_time=1)
         self.play(Create(vert_line_0), run_time=1)
@@ -160,7 +235,7 @@ class Function(MovingCameraScene):
         riemann_rects = axes.get_riemann_rectangles(
             func_graph,
             x_range=[0, 5],
-            dx=5/6,
+            dx=5/5,
             input_sample_type="right", # O "left", "center"
             stroke_width=1,
             stroke_color=WHITE,
@@ -196,7 +271,7 @@ class Function(MovingCameraScene):
 
         # Atenuamos la curva completa (20% de opacidad) y hacemos aparecer el tramo
         self.play(
-            func_graph.animate.set_opacity(0.25),
+        func_graph.animate.set_stroke(opacity=0.25),
             Create(sub_func_graph),
             run_time=1.5
         )
@@ -249,7 +324,7 @@ class Function(MovingCameraScene):
         # Camara vuelve a la vista completa
         self.play(
             self.camera.frame.animate.scale(1 / 0.45).move_to(axes.get_center()),
-            func_graph.animate.set_opacity(1),
+            func_graph.animate.set_stroke(opacity=1),
             run_time=2
         )
         self.wait(0.5)
@@ -259,7 +334,7 @@ class Function(MovingCameraScene):
         )
         self.play(Create(riemann_rects), run_time=1.5)
 
-        for num_rects in [5, 15, 40]:
+        for num_rects in [15, 40]:
             new_rects = axes.get_riemann_rectangles(
                 func_graph,
                 x_range=[0, 5],
@@ -269,3 +344,95 @@ class Function(MovingCameraScene):
             )
             self.play(Transform(riemann_rects, new_rects), run_time=1.5)
             self.wait(2)
+            
+class Conclusion(Scene):
+    def construct(self):
+        # 1. TÍTULO
+        titulo = Text("Conclusión del Proyecto", font_size=26, color=YELLOW).to_edge(UP, buff=0.3)
+
+        # 2. REPETICIÓN DE LA PREGUNTA CENTRAL
+        pregunta_hdr = Text("Pregunta Central:", font_size=18, color=YELLOW_B)
+        pregunta_txt = Text(
+            "\"¿Es estrictamente necesario que el punto muestra x_i* sea el punto medio,\n"
+            "o puede ser cualquier punto interior al tomar el límite cuando n → ∞?\"",
+            font_size=15, color=WHITE
+        )
+        bloque_pregunta = VGroup(pregunta_hdr, pregunta_txt).arrange(DOWN, buff=0.1)
+
+        # 3. RESPUESTA FORMAL
+        respuesta = Text("Respuesta: NO es estrictamente necesario.", font_size=18, color=GREEN)
+
+        p1 = MathTex(
+            r"\bullet \text{ Como } f(x) \text{ es continua en } [0, 5], \text{ el ancho } \Delta x = \frac{5-0}{n} \to 0 \text{ cuando } n \to \infty.",
+            font_size=16
+        )
+        p2 = MathTex(
+            r"\bullet \text{ Al volverse } \Delta x \text{ infinitamente pequeño, la elección de } x_i^* \text{ no altera el valor final}.",
+            font_size=16
+        )
+
+        # 4. RESULTADO ENMARCADO
+        formula_final = MathTex(
+            r"\lim_{n \to \infty} \sum_{i=1}^{n} f(x_i^*) \Delta x = \int_0^5 f(x) \, dx = \frac{185}{12} \approx 15.4167",
+            font_size=20
+        )
+        box = SurroundingRectangle(formula_final, color=YELLOW, buff=0.15)
+        resultado = VGroup(box, formula_final)
+
+        # 5. DISPOSICIÓN Y ANIMACIÓN
+        cuerpo = VGroup(bloque_pregunta, respuesta, p1, p2, resultado).arrange(DOWN, buff=0.22)
+        cuerpo.next_to(titulo, DOWN, buff=0.3)
+
+        self.play(Write(titulo))
+        self.play(FadeIn(bloque_pregunta))
+        self.wait(1)
+        self.play(Write(respuesta))
+        self.play(Write(p1))
+        self.play(Write(p2))
+        self.wait(1)
+        self.play(Create(box), Write(formula_final))
+        self.wait(4)
+
+class Creditos(Scene):
+    def construct(self):
+        titulo = Text("Referencias y Créditos", font_size=28, color=YELLOW).to_edge(UP)
+
+        # Bloque de integrantes y roles
+        t1 = Text("Integrantes (Grupo 11):", font_size=20, color=BLUE)
+        integrantes = Text(
+            "• Lucas: Explicación Matemática\n"
+            "• Nicolás: Manim y Desarrollo de Código\n"
+            "• Diego: README y Edición de Video",
+            font_size=16, color=WHITE
+        )
+
+        # Bloque de fuentes bibliográficas
+        t2 = Text("Bibliografía:", font_size=20, color=BLUE)
+        biblio = Text(
+            "• Stewart, J. (2012). Cálculo de una variable: Trascendentes tempranas.\n"
+            "• Apuntes y material del curso MAT1134 - Cálculo Intermedio.",
+            font_size=16, color=WHITE
+        )
+
+        # Bloque de software e Inteligencia Artificial
+        t3 = Text("Herramientas y Declaración de IA:", font_size=20, color=BLUE)
+        herramientas = Text(
+            "• Animaciones generadas con Manim Community v0.18+ (Python).\n"
+            "• Uso de IA Generativa para asistencia en sintaxis de Manim y guion.",
+            font_size=16, color=WHITE
+        )
+
+        g1 = VGroup(t1, integrantes).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        g2 = VGroup(t2, biblio).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        g3 = VGroup(t3, herramientas).arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+
+        todo = VGroup(g1, g2, g3).arrange(DOWN, aligned_edge=LEFT, buff=0.3)
+        todo.next_to(titulo, DOWN, buff=0.4)
+
+        self.play(Write(titulo))
+        self.play(FadeIn(g1))
+        self.wait(1)
+        self.play(FadeIn(g2))
+        self.wait(1)
+        self.play(FadeIn(g3))
+        self.wait(4)
