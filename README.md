@@ -139,6 +139,20 @@ uv run python -m manim -qh src/eid_calculo_intermedio/escenas.py Portada Teoria 
 
 Cada escena genera un clip independiente. El montaje final y la narración se realizan mediante un editor de video.
 
+## Videos generados
+
+Los siete clips completos están disponibles en alta calidad (1920 × 1080, 60 fps). Cada escena es un archivo independiente, listo para descargar y montar con la narración.
+
+- [Portada.mp4](media/videos/escenas/1080p60/Portada.mp4)
+- [Teoria.mp4](media/videos/escenas/1080p60/Teoria.mp4)
+- [ExplicacionFormula.mp4](media/videos/escenas/1080p60/ExplicacionFormula.mp4)
+- [EjemploNumerico.mp4](media/videos/escenas/1080p60/EjemploNumerico.mp4)
+- [Function.mp4](media/videos/escenas/1080p60/Function.mp4)
+- [Conclusion.mp4](media/videos/escenas/1080p60/Conclusion.mp4)
+- [Creditos.mp4](media/videos/escenas/1080p60/Creditos.mp4)
+
+Los fragmentos temporales y las vistas previas de baja calidad se conservan localmente.
+
 ## Estructura del repositorio
 
 ~~~text
