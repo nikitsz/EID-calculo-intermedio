@@ -252,7 +252,9 @@ class Function(MovingCameraScene):
      # 2. Hacemos el acercamiento de cámara en 2.5 segundos
         self.play(
         self.camera.frame.animate.scale(0.45).move_to(punto_enfoque),
-        FadeOut(axes.x_axis.numbers),
+        # Ocultar solo los números sin retirar objetos del eje de la escena.
+        # FadeOut puede descomponer NumberLine y dejar fuera su línea base.
+        axes.x_axis.numbers.animate.set_opacity(0),
         FadeOut(func_label, intervalo),
         run_time=2.5
      )
@@ -347,7 +349,7 @@ class Function(MovingCameraScene):
         self.play(
             self.camera.frame.animate.scale(1 / 0.45).move_to(axes.get_center()),
             func_graph.animate.set_stroke(opacity=1),
-            FadeIn(axes.x_axis.numbers),
+            axes.x_axis.numbers.animate.set_opacity(1),
             FadeIn(func_label, intervalo),
             run_time=2
         )
