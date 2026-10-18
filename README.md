@@ -149,10 +149,10 @@ Cada escena genera un clip independiente. La versión de seis minutos se obtiene
 La versión local más reciente es:
 
 ~~~text
-output/videos/Grupo_11_Suma_Riemann_6_minutos_final_Diego_actualizado.mp4
+output/videos/Grupo_11_Suma_Riemann_6_minutos_referencias_actualizadas.mp4
 ~~~
 
-Conserva los contenidos de las siete escenas. La duración se amplió mediante animaciones más lentas y pausas sobre la imagen. Las voces se dividieron por frases y se colocaron con silencios para acompañar las fórmulas, los movimientos del punto muestra y los créditos. El último cambio reemplazó la narración final de Diego por su nueva grabación.
+Conserva los contenidos de las siete escenas. La duración se amplió mediante animaciones más lentas y pausas sobre la imagen. Las voces se dividieron por frases y se colocaron con silencios para acompañar las fórmulas, los movimientos del punto muestra y los créditos. La narración final de Diego fue reemplazada por su nueva grabación. La última edición añadió a la bibliografía de los créditos la referencia de Thomas et al. (2015), conservando la duración y el audio sincronizado.
 
 Se aplicaron ajustes moderados de ruido y volumen a las grabaciones. El montaje conserva la imagen en 1080p y 60 fps, con audio AAC estéreo a 48 kHz. La duración de 360 segundos y la decodificación completa de imagen y sonido se verificaron después de la exportación. Estas ediciones se realizaron fuera del código base de las escenas.
 
@@ -178,6 +178,8 @@ Los siguientes materiales están disponibles en la copia local:
 - `docs/guion_audio_6min/Guion_estudio_narracion_6_minutos.md`: versión editable del guion, con pronunciación de símbolos y cálculos del zoom.
 - `docs/guion_audio_6min/`: nueve archivos de texto con las partes para grabar; la escena gráfica está dividida entre las tres voces.
 - `docs/PAUTA_REPASO_GRUPO_11.md`: repaso de la matemática y del funcionamiento del proyecto.
+- `output/pdf/Guia_matematica_estudio_Grupo_11.pdf`: guía matemática de 11 páginas, compuesta en LaTeX, con símbolos explicados, cálculos paso a paso, cuatro ejercicios resueltos y 24 preguntas de matemática y código con respuestas.
+- `docs/Guia_matematica_Grupo_11/`: proyecto LaTeX editable de la guía matemática, con su esquema del zoom.
 
 ### Clips originales por escena
 
@@ -222,6 +224,7 @@ Este README documenta el proyecto desde la raíz del repositorio. Parte del mate
 2. **Pauta EID:** Higueras, N.; Oyarzo, F.; Matus, V. Evaluación Integrada de Desempeño: Introducción a la integral con Manim Community. Versión 2026. Documento del curso.
 3. **Stewart, J. (2012).** Cálculo de una variable: Trascendentes tempranas. Referencia declarada en los créditos del video.
 4. **Material de la asignatura.** Apuntes y material del curso de Cálculo Intermedio. Referencia declarada en los créditos del video.
+5. **Thomas, G. B. et al. (2015).** Cálculo: Una variable (13.ª ed.). Referencia añadida a la bibliografía de los créditos del video.
 
 ## Declaración de uso de inteligencia artificial
 
