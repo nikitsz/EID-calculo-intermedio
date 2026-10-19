@@ -2,7 +2,7 @@
 
 Proyecto de animación matemática con **Manim Community** para la Evaluación Integrada de Desempeño (EID), 2026.
 
-**Estado del montaje al 18 de octubre de 2026:** video de **6 minutos exactos**, en **1920 × 1080 y 60 fps**, con las narraciones de Diego y Lucas sincronizadas. Falta incorporar la voz de Nicolás en el tramo **01:25–03:25**.
+**Estado del montaje al 18 de octubre de 2026:** video de **6 minutos exactos**, en **1920 × 1080 y 60 fps**, con las tres voces incorporadas. La versión `output/videos/Videofinal_corregido.mp4` corrige la notación de la pregunta y la respuesta con intervalo cerrado, y añade la conexión con la integral.
 
 ## Identificación
 
@@ -10,7 +10,7 @@ Proyecto de animación matemática con **Manim Community** para la Evaluación I
 - **Sección:** 1.
 - **Grupo:** 11 (G11).
 - **Tema:** Punto medio y punto interior.
-- **Pregunta central:** ¿El punto muestra $x_i^{\ast}$ debe ser obligatoriamente el punto medio o puede ser cualquier punto interior de $[x_{i-1},x_i]$ para calcular la suma de Riemann finita $S_n$?
+- **Pregunta central:** ¿El punto muestra $x_i^{\ast}$ debe ser el punto medio o puede ser cualquier punto de $[x_{i-1},x_i]$, incluidos los extremos, para calcular la suma de Riemann finita $S_n$?
 - **Repositorio:** https://github.com/nikitsz/EID-calculo-intermedio
 
 | Integrante | GitHub | Responsabilidad principal y aportes |
@@ -44,6 +44,18 @@ $$
 Los valores $\theta_i=0$, $1$ y $1/2$ corresponden al extremo izquierdo, al derecho y al punto medio. Otros valores entre 0 y 1 producen puntos interiores distintos del punto medio. La elección puede variar de un subintervalo a otro.
 
 La base del rectángulo depende de la partición; su altura depende de la función evaluada en el punto elegido. Una elección válida no tiene que dar exactamente el área bajo la curva en ese tramo.
+
+### Conexión de la conclusión con la integral
+
+Como la función del ejemplo es continua en $[0,5]$, las sumas sobre particiones uniformes convergen a la integral cuando $\Delta x=5/n\to0$, para cualquier elección válida $x_i^*\in[x_{i-1},x_i]$, incluidos los extremos:
+
+$$
+\lim_{n\to\infty} S_n=\int_0^5\left(-\frac{x^2}{5}+\frac{3x}{2}+1\right)dx
+=\left[-\frac{x^3}{15}+\frac{3x^2}{4}+x\right]_0^5
+=\frac{185}{12}\approx15.4167.
+$$
+
+Las sumas finitas pueden variar con los puntos elegidos; el límite es el mismo. El montaje corregido muestra esta conexión durante los últimos 14 segundos de la conclusión como apoyo visual, conservando el audio original. La portada y la conclusión usan `MathTex` para mostrar subíndices y superíndices correctamente. El script reproducible de montaje es `output/videos/edicion_6min/corregir_conclusion_integral.py`.
 
 ## Ejemplo y comparación visual
 
@@ -87,7 +99,7 @@ Las escenas se encuentran en [escenas.py](src/eid_calculo_intermedio/escenas.py)
 | ExplicacionFormula | 00:49–01:25 | 36 s | Explica la sumatoria, la altura y la base del rectángulo. |
 | EjemploNumerico | 01:25–02:15 | 50 s | Presenta la función y compara valores de sumas finitas. |
 | Function | 02:15–04:44 | 149 s | Grafica la función, delimita el intervalo, muestra cinco rectángulos derechos, compara puntos muestra en una base fija y termina con particiones de 5, 15 y 40 rectángulos. |
-| Conclusion | 04:44–05:30 | 46 s | Responde la pregunta con la fórmula de S_n. |
+| Conclusion | 04:44–05:30 | 46 s | Responde con el intervalo cerrado, justifica la variación de S_n y conecta su límite con la integral definida. |
 | Creditos | 05:30–06:00 | 30 s | Muestra integrantes, referencias y herramientas. |
 
 En las particiones finales no se fija explícitamente el criterio de muestreo; se usa el valor predeterminado de la versión instalada de Manim.
@@ -146,17 +158,19 @@ Cada escena genera un clip independiente. La versión de seis minutos se obtiene
 
 ### Montaje editado de seis minutos
 
-La versión local más reciente es:
+La versión final corregida está disponible en el repositorio:
 
 ~~~text
-output/videos/Grupo_11_Suma_Riemann_6_minutos_referencias_actualizadas.mp4
+output/videos/Videofinal_corregido.mp4
 ~~~
 
-Conserva los contenidos de las siete escenas. La duración se amplió mediante animaciones más lentas y pausas sobre la imagen. Las voces se dividieron por frases y se colocaron con silencios para acompañar las fórmulas, los movimientos del punto muestra y los créditos. La narración final de Diego fue reemplazada por su nueva grabación. La última edición añadió a la bibliografía de los créditos la referencia de Thomas et al. (2015), conservando la duración y el audio sincronizado.
+[Descargar el video final corregido](https://github.com/nikitsz/EID-calculo-intermedio/raw/refs/heads/main/output/videos/Videofinal_corregido.mp4)
+
+Conserva los contenidos de las siete escenas. La duración se amplió mediante animaciones más lentas y pausas sobre la imagen. Las voces se dividieron por frases y se colocaron con silencios para acompañar las fórmulas, los movimientos del punto muestra y los créditos. La narración final de Diego fue reemplazada por su nueva grabación y se incorporó la voz de Nicolás. Los créditos incluyen Thomas et al. (2015). La última edición sustituye la portada y la conclusión por las escenas corregidas, con la conexión explícita a la integral, conservando duración, capítulos y audio sincronizado.
 
 Se aplicaron ajustes moderados de ruido y volumen a las grabaciones. El montaje conserva la imagen en 1080p y 60 fps, con audio AAC estéreo a 48 kHz. La duración de 360 segundos y la decodificación completa de imagen y sonido se verificaron después de la exportación. Estas ediciones se realizaron fuera del código base de las escenas.
 
-El archivo editado y los materiales de narración se conservan localmente; todavía no están versionados en Git. Su presencia en este README no significa que puedan descargarse desde GitHub. El MP4 anterior `output/videos/Grupo_11_Suma_Riemann.mp4` corresponde al montaje breve original, no a la edición actual de seis minutos.
+Se incluyen en Git el video final corregido, su montaje de origen `Videofinal.mp4`, las escenas corregidas, el script de montaje, la verificación y el texto actualizado de la conclusión. Los demás materiales de narración y estudio descritos más abajo se conservan localmente. El MP4 anterior `output/videos/Grupo_11_Suma_Riemann.mp4` corresponde al montaje breve original, no a la edición actual de seis minutos.
 
 ### Reparto y estado de las narraciones
 
@@ -166,9 +180,9 @@ El guion asigna **120 segundos de video a cada integrante**, incluidas las pausa
 | --- | --- | --- | --- |
 | Diego | 00:00–00:49; 03:25–04:06; 05:30–06:00 | Portada, teoría, movimiento del punto en el zoom y créditos | Audios incorporados y sincronizados; final reemplazado por la nueva grabación |
 | Lucas | 00:49–01:25; 04:06–05:30 | Fórmula, particiones finales y conclusión | Cinco grabaciones incorporadas, con cortes entre frases y pausas |
-| Nicolás | 01:25–03:25 | Ejemplo numérico, gráfica y entrada al zoom | Narración pendiente; el contenido visual ya está incluido |
+| Nicolás | 01:25–03:25 | Ejemplo numérico, gráfica y entrada al zoom | Narración incorporada y sincronizada en Videofinal.mp4 y en la versión corregida |
 
-Las partes sin grabación permanecen sin narración. Para completar el montaje falta incorporar las voces de Nicolás y revisar la reproducción del video completo con los tres integrantes.
+La versión corregida parte de `Videofinal.mp4` y conserva sus tres voces sin recodificar el audio. La incorporación de la conexión con la integral es visual; no se añadió una voz sintética.
 
 ### Guion y material de estudio
 
@@ -183,7 +197,7 @@ Los siguientes materiales están disponibles en la copia local:
 
 ### Clips originales por escena
 
-Los siete clips completos están disponibles en alta calidad (1920 × 1080, 60 fps). Son las animaciones independientes previas a la edición de duración y narración:
+Los siete clips completos están disponibles en alta calidad (1920 × 1080, 60 fps). Portada y Conclusion corresponden a las escenas corregidas de 24 y 46 segundos; los demás son las animaciones independientes previas al montaje con narración:
 
 - [Portada.mp4](media/videos/escenas/1080p60/Portada.mp4)
 - [Teoria.mp4](media/videos/escenas/1080p60/Teoria.mp4)
@@ -230,7 +244,7 @@ Este README documenta el proyecto desde la raíz del repositorio. Parte del mate
 
 Se utilizó **Codex de OpenAI** para redactar y actualizar este README a partir del código, la pauta EID y los datos del grupo. La asistencia comprendió organización, descripción de escenas, explicación matemática e instrucciones de ejecución. También se utilizó para preparar el guion y las guías de estudio, apoyar correcciones de la animación y realizar la edición con FFmpeg: ampliación de duración, tratamiento de audio, cortes, pausas y sincronización por frases. Se empleó reconocimiento de voz ejecutado localmente para ubicar las frases dentro de las grabaciones.
 
-Las voces incorporadas son grabaciones de los integrantes; no se generaron voces sintéticas. Las ediciones de duración y narración se realizaron sin modificar el código base de las escenas. En los créditos también se declara el uso de asistencia de IA para la sintaxis de Manim y el guion.
+Las voces incorporadas son grabaciones de los integrantes; no se generaron voces sintéticas. La corrección de la pregunta, la respuesta con intervalo cerrado y la conexión con la integral se implementaron en el código de las escenas y se incorporaron al montaje con FFmpeg. En los créditos también se declara el uso de asistencia de IA para la sintaxis de Manim y el guion.
 
 La validación incluyó el renderizado de las siete escenas con Manim Community 0.22.0 y MiKTeX, tanto en vista previa (480p, 15 fps) como en alta calidad (1080p, 60 fps). Se revisaron visualmente las fórmulas y el zoom, comprobando el punto rojo sobre la curva, las etiquetas de los extremos y del punto muestra y la continuidad del eje X. Para el montaje actual se verificaron además la duración de seis minutos, los intervalos de narración, los niveles de audio y la decodificación completa del archivo exportado.
 

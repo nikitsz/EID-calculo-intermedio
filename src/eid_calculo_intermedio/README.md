@@ -8,7 +8,7 @@ Proyecto de animación matemática con **Manim Community** para la Evaluación I
 - **Sección:** 1.
 - **Grupo:** 11 (G11).
 - **Tema:** Punto medio y punto interior.
-- **Pregunta central:** ¿El punto muestra $x_i^{\ast}$ debe ser obligatoriamente el punto medio o puede ser cualquier punto interior de $[x_{i-1},x_i]$ para calcular la suma de Riemann finita $S_n$?
+- **Pregunta central:** ¿El punto muestra $x_i^{\ast}$ debe ser el punto medio o puede ser cualquier punto de $[x_{i-1},x_i]$, incluidos los extremos, para calcular la suma de Riemann finita $S_n$?
 - **Repositorio:** https://github.com/nikitsz/EID-calculo-intermedio
 
 | Integrante | GitHub | Responsabilidad principal y aportes |
@@ -42,6 +42,8 @@ $$
 Los valores $\theta_i=0$, $1$ y $1/2$ corresponden al extremo izquierdo, al derecho y al punto medio. Otros valores entre 0 y 1 producen puntos interiores distintos del punto medio. La elección puede variar de un subintervalo a otro.
 
 La base del rectángulo depende de la partición; su altura depende de la función evaluada en el punto elegido. Una elección válida no tiene que dar exactamente el área bajo la curva en ese tramo.
+
+La conclusión conecta las sumas con la integral: como $f$ es continua en $[0,5]$, al tomar $\Delta x=5/n\to0$ se tiene $\lim_{n\to\infty}S_n=\int_0^5f(x)\,dx=185/12\approx15.4167$, para cualquier elección de puntos muestra en los intervalos cerrados. La portada y la conclusión muestran la pregunta con notación matemática, e incluyen explícitamente los extremos como opciones válidas. El montaje actualizado está en `output/videos/Videofinal_corregido.mp4` (ruta desde la raíz del proyecto).
 
 ## Ejemplo y comparación visual
 
@@ -84,7 +86,7 @@ Las escenas se encuentran en [escenas.py](escenas.py).
 | Portada | Presenta al grupo y la pregunta sobre la suma finita. |
 | Teoria | Explica la partición y las opciones de punto muestra. |
 | EjemploNumerico | Presenta la función y compara valores de sumas finitas. |
-| Conclusion | Responde la pregunta con la fórmula de S_n. |
+| Conclusion | Responde con el intervalo cerrado y conecta el límite de S_n con la integral definida. |
 | Creditos | Muestra integrantes, referencias y herramientas. |
 | Function | Grafica la función, delimita el intervalo, muestra cinco rectángulos derechos, compara puntos muestra en una base fija y termina con particiones de 5, 15 y 40 rectángulos. |
 

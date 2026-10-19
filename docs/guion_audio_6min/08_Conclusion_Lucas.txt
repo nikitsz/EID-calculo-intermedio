@@ -1,0 +1,8 @@
+Retomamos la pregunta central. El punto muestra no tiene que ser obligatoriamente el punto medio. Este es una elección particular dentro de cada subintervalo; cualquier otro punto interior también permite construir una suma de Riemann válida.
+
+La definición con intervalo cerrado admite además los extremos. Sin embargo, mantener fija la partición no obliga a obtener siempre la misma suma: al cambiar el punto muestra pueden cambiar las alturas y, con ellas, el resultado.
+
+En la fórmula final, ese sub ene suma base por altura para los ene rectángulos. En nuestro intervalo, delta equis es cinco dividido por ene. La partición determina las bases y la elección del punto muestra determina dónde evaluamos la función.
+
+[Apoyo visual añadido al montaje; no forma parte del audio grabado]
+Como f es continua en [0,5], al refinar las particiones uniformes (delta equis = 5/n tiende a cero), las sumas de Riemann convergen a la integral definida, cualquiera sea la elección válida del punto muestra, incluidos los extremos. En este ejemplo, la integral de cero a cinco de (-x²/5 + 3x/2 + 1) es [-x³/15 + 3x²/4 + x] de cero a cinco, igual a 185/12, aproximadamente 15,4167. Una suma finita puede cambiar al elegir otros puntos; el límite es el mismo.

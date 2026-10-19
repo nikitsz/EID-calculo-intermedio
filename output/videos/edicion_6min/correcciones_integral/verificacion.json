@@ -1,0 +1,18 @@
+{
+  "video": "C:\\Users\\Diego\\Desktop\\ESTUDIO\\Universidad\\Segundo semestre\\Calculo 2\\EID\\eid\\EID-calculo-intermedio\\output\\videos\\Videofinal_corregido.mp4",
+  "fuente": "C:\\Users\\Diego\\Desktop\\ESTUDIO\\Universidad\\Segundo semestre\\Calculo 2\\EID\\eid\\EID-calculo-intermedio\\output\\videos\\Videofinal.mp4",
+  "sha256_fuente": "27203192d538132768b8b65be37e8193a20566795eba42e0994bdad05b7db184",
+  "duracion": 360,
+  "resolucion": "1920x1080",
+  "fps": 60,
+  "audio_original_identico": true,
+  "capitulos": 7,
+  "cambios": [
+    "00:00–00:24: pregunta en notación matemática y extremos explícitos",
+    "04:44–05:30: respuesta con intervalo cerrado y conexión con la integral",
+    "05:16–05:30: límite, integral y evaluación 185/12 visibles"
+  ],
+  "integral": "185/12 = 15.4166666667",
+  "decodificacion_completa": true,
+  "nota": "La conexión con la integral es un apoyo visual; se conserva la narración grabada."
+}

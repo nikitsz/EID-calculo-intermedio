@@ -1,6 +1,14 @@
 from manim import *
 import numpy as np
 
+def pregunta_central(font_size=24):
+    """Pregunta con notación matemática y extremos incluidos explícitamente."""
+    return VGroup(
+        MathTex(r"\text{¿El punto muestra } x_i^* \text{ debe ser el punto medio}", font_size=font_size),
+        MathTex(r"\text{o puede ser cualquier punto de } [x_{i-1},x_i]", font_size=font_size),
+        MathTex(r"\text{(incluidos los extremos) para calcular } S_n\text{?}", font_size=font_size),
+    ).arrange(DOWN, buff=0.15)
+
 class Portada(Scene):
     def construct(self):
         # 1. CREACIÓN DE OBJETOS DE TEXTO
@@ -10,12 +18,7 @@ class Portada(Scene):
 
         # Bloque de la Pregunta Central
         pregunta_hdr = Text("Pregunta Central:", font_size=20, color=YELLOW_B)
-        pregunta = Text(
-            "¿El punto muestra x_i* debe ser obligatoriamente el punto medio\n"
-            "o puede ser cualquier punto interior de [x_{i-1}, x_i]\n"
-            "para calcular la suma de Riemann finita S_n?",
-            font_size=18, color=WHITE
-        )
+        pregunta = pregunta_central()
 
         # 2. AGRUPACIÓN Y ORDENAMIENTO (LAYOUT)
         encabezado = VGroup(titulo, subtitulo, integrantes).arrange(DOWN, buff=0.3)
@@ -25,11 +28,11 @@ class Portada(Scene):
         pantalla_completa = VGroup(encabezado, bloque_pregunta).arrange(DOWN, buff=0.7)
 
         # 3. SECUENCIA DE ANIMACIÓN
-        self.play(Write(encabezado), run_time=2.5)
-        self.wait(1)
+        self.play(Write(encabezado), run_time=5)
+        self.wait(2)
         
-        self.play(FadeIn(bloque_pregunta), run_time=2)
-        self.wait(3)
+        self.play(FadeIn(bloque_pregunta), run_time=4)
+        self.wait(13)
 
 class Teoria(Scene):
     def construct(self):
@@ -43,7 +46,7 @@ class Teoria(Scene):
         t2 = Text("2. Elección del punto muestra:", font_size=16, color=GREEN)
         sub2 = MathTex(r"\text{En cada } [x_{i-1}, x_i], \text{ elegimos } x_i^* \text{ para evaluar } f(x_i^*).", font_size=18)
 
-        t3 = Text("3. Opciones habituales para } x_i^*:", font_size=16, color=ORANGE)
+        t3 = Text("3. Opciones habituales para el punto muestra:", font_size=16, color=ORANGE)
         op1 = MathTex(r"\bullet \text{ Extremo izquierdo: } x_i^* = x_{i-1}", font_size=17)
         op2 = MathTex(r"\bullet \text{ Extremo derecho: } x_i^* = x_i", font_size=17)
         op3 = MathTex(r"\bullet \text{ Punto medio: } x_i^* = \frac{x_{i-1} + x_i}{2}", font_size=17)
@@ -378,19 +381,14 @@ class Conclusion(Scene):
 
         # 2. REPETICIÓN DE LA PREGUNTA CENTRAL
         pregunta_hdr = Text("Pregunta Central:", font_size=18, color=YELLOW_B)
-        pregunta_txt = Text(
-            "¿El punto muestra x_i* debe ser obligatoriamente el punto medio\n"
-            "o puede ser cualquier punto interior de [x_{i-1}, x_i]\n"
-            "para calcular la suma de Riemann finita S_n?",
-            font_size=15, color=WHITE
-        )
+        pregunta_txt = pregunta_central(font_size=20)
         bloque_pregunta = VGroup(pregunta_hdr, pregunta_txt).arrange(DOWN, buff=0.1)
 
         # 3. RESPUESTA FORMAL
         respuesta = Text("Respuesta: NO es estrictamente necesario.", font_size=18, color=GREEN)
 
         p1 = MathTex(
-            r"\bullet \text{ El punto medio es una opción; cualquier } x_{i-1} < x_i^* < x_i \text{ es un punto interior válido.}",
+            r"\bullet \text{ Cualquier } x_i^*\in[x_{i-1},x_i] \text{ es válido, incluidos los extremos; el medio es una opción.}",
             font_size=16
         )
         p2 = MathTex(
@@ -406,19 +404,32 @@ class Conclusion(Scene):
         box = SurroundingRectangle(formula_final, color=YELLOW, buff=0.15)
         resultado = VGroup(box, formula_final)
 
+        conexion = VGroup(
+            Text("Conexión con la integral", font_size=21, color=BLUE_B),
+            MathTex(r"f\text{ continua en }[0,5],\quad \Delta x=5/n\to0\quad\Longrightarrow\quad"
+                    r"\lim_{n\to\infty}S_n=\int_0^5 f(x)\,dx", font_size=21),
+            MathTex(r"\int_0^5\left(-\frac{x^2}{5}+\frac{3x}{2}+1\right)dx"
+                    r"=\left[-\frac{x^3}{15}+\frac{3x^2}{4}+x\right]_0^5"
+                    r"=\frac{185}{12}\approx15.4167", font_size=21),
+            Text("Todo punto muestra válido lleva al mismo límite al refinar la partición.", font_size=17),
+        ).arrange(DOWN, buff=0.15)
+
         # 5. DISPOSICIÓN Y ANIMACIÓN
-        cuerpo = VGroup(bloque_pregunta, respuesta, p1, p2, resultado).arrange(DOWN, buff=0.22)
+        cuerpo = VGroup(bloque_pregunta, respuesta, p1, p2, resultado, conexion).arrange(DOWN, buff=0.22)
         cuerpo.next_to(titulo, DOWN, buff=0.3)
 
-        self.play(Write(titulo))
-        self.play(FadeIn(bloque_pregunta))
-        self.wait(1)
-        self.play(Write(respuesta))
-        self.play(Write(p1))
-        self.play(Write(p2))
-        self.wait(1)
-        self.play(Create(box), Write(formula_final))
-        self.wait(4)
+        self.play(Write(titulo), run_time=1)
+        self.play(FadeIn(bloque_pregunta), run_time=1)
+        self.wait(2)
+        self.play(Write(respuesta), run_time=1)
+        self.wait(3)
+        self.play(Write(p1), run_time=1)
+        self.wait(10)
+        self.play(Write(p2), run_time=1)
+        self.wait(10)
+        self.play(Create(box), Write(formula_final), run_time=1)
+        self.play(FadeIn(conexion), run_time=1)
+        self.wait(14)
 
 class Creditos(Scene):
     def construct(self):
